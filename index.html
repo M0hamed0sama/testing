@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asteroid Impact Simulator</title>
+    <meta name="description" content="Scientific asteroid impact simulator with 3D mapping and physics calculations">
+    
+    <!-- MapLibre GL JS -->
+    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet">
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    
+    <!-- Turf.js for geospatial calculations -->
+    <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+    
+    <!-- D3.js for data visualization -->
+    <script src="https://unpkg.com/d3@7.8.5/dist/d3.min.js"></script>
+    
+    <!-- Chart.js for statistics -->
+    <script src="https://unpkg.com/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/ui.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <h1 class="app-title">
+                <span class="icon">🌍</span>
+                Asteroid Impact Simulator
+            </h1>
+            <div class="phase-indicator">
+                <span class="phase-badge" id="phaseIndicator">Phase 2</span>
+                <label style="margin-left: 15px; color: white; font-size: 0.9rem;">
+                    <input type="checkbox" id="enablePhase2" checked> 
+                    Enable Phase 2 Features
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Control Panel -->
+        <aside class="control-panel" id="controlPanel">
+            <!-- Input Mode Panel -->
+            <div id="inputMode">
+                <div class="panel-header">
+                    <h2>Impact Parameters</h2>
+                </div>
+
+                <!-- Asteroid Properties -->
+                <section class="control-section">
+                    <h3>Asteroid Properties</h3>
+                
+                <div class="input-group">
+                    <label for="diameter">Diameter (m)</label>
+                    <input type="range" id="diameter" min="1" max="10000" value="100" step="1">
+                    <span class="input-value" id="diameterValue">100 m</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="velocity">Velocity (km/s)</label>
+                    <input type="range" id="velocity" min="5" max="70" value="20" step="0.5">
+                    <span class="input-value" id="velocityValue">20 km/s</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="angle">Impact Angle (°)</label>
+                    <input type="range" id="angle" min="15" max="90" value="45" step="1">
+                    <span class="input-value" id="angleValue">45°</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="composition">Composition</label>
+                    <select id="composition">
+                        <option value="rock" selected>Rocky (2700 kg/m³)</option>
+                        <option value="iron">Iron (7800 kg/m³)</option>
+                        <option value="ice">Ice (917 kg/m³)</option>
+                        <option value="custom">Custom Density</option>
+                    </select>
+                </div>
+
+                <div class="input-group" id="customDensityGroup" style="display: none;">
+                    <label for="density">Custom Density (kg/m³)</label>
+                    <input type="number" id="density" min="500" max="8000" value="2700" step="100">
+                </div>
+            </section>
+
+            <!-- Impact Location -->
+            <section class="control-section">
+                <h3>Impact Location</h3>
+                
+                <div class="input-group">
+                    <label for="latitude">Latitude</label>
+                    <input type="number" id="latitude" min="-90" max="90" value="40.7128" step="0.0001">
+                </div>
+
+                <div class="input-group">
+                    <label for="longitude">Longitude</label>
+                    <input type="number" id="longitude" min="-180" max="180" value="-74.0060" step="0.0001">
+                </div>
+
+                <button class="btn-primary" id="selectOnMap">
+                    📍 Select on Map
+                </button>
+            </section>
+
+            <!-- Simulation Controls -->
+            <section class="control-section">
+                <h3>Simulation</h3>
+                
+                <button class="btn-simulate" id="simulateBtn">
+                    🚀 Run Simulation
+                </button>
+
+                <div class="preset-buttons">
+                    <button class="btn-preset" data-preset="tunguska">Tunguska 1908</button>
+                    <button class="btn-preset" data-preset="chelyabinsk">Chelyabinsk 2013</button>
+                    <button class="btn-preset" data-preset="chicxulub">Chicxulub</button>
+                </div>
+            </section>
+
+
+
+            <!-- Animation Controls -->
+            <section class="control-section">
+                <h3>Animation</h3>
+                
+                <div class="input-group">
+                    <label for="animationSpeed">Speed</label>
+                    <input type="range" id="animationSpeed" min="0.1" max="2" value="1" step="0.1">
+                    <span class="input-value" id="animationSpeedValue">1x</span>
+                </div>
+
+                <div class="animation-controls">
+                    <button class="btn-icon" id="playAnimation" title="Play">▶️</button>
+                    <button class="btn-icon" id="pauseAnimation" title="Pause">⏸️</button>
+                    <button class="btn-icon" id="resetAnimation" title="Reset">⏹️</button>
+                </div>
+
+                <!-- Phase 2 Animation Options -->
+                <div class="toggle-group" style="margin-top: 12px;">
+                    <label class="toggle-item phase-2" style="padding: 6px;">
+                        <input type="checkbox" id="animateSeismic" checked>
+                        <span class="toggle-label">⚡ Animate Seismic Waves</span>
+                    </label>
+                    <label class="toggle-item phase-2" style="padding: 6px;">
+                        <input type="checkbox" id="animateTsunami" checked>
+                        <span class="toggle-label">🌊 Animate Tsunami Propagation</span>
+                    </label>
+                </div>
+            </section>
+            </div>
+
+            <!-- Results Mode Panel -->
+            <div id="resultsMode" style="display: none;">
+                <div class="panel-header">
+                    <h2>Impact Results</h2>
+                    <button class="btn-new" id="newSimulationBtn">
+                        🔄 New Simulation
+                    </button>
+                </div>
+
+                <div class="results-content" id="resultsContent">
+                    <!-- Results will be populated here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Visualization Controls (Always Visible) -->
+            <section class="control-section visualization-controls">
+                <h3>Effect Visualization</h3>
+                <p class="timeline-description">Select one effect to visualize:</p>
+                
+                <div class="timeline-group">
+                    <label class="timeline-item">
+                        <input type="radio" name="visualizationLayer" id="showCrater" value="crater" checked>
+                        <span class="timeline-number">1</span>
+                        <span class="timeline-content">
+                            <span class="timeline-label">🕳️ Crater Formation</span>
+                        </span>
+                    </label>
+                    
+                    <label class="timeline-item">
+                        <input type="radio" name="visualizationLayer" id="showBlastWave" value="blast">
+                        <span class="timeline-number">2</span>
+                        <span class="timeline-content">
+                            <span class="timeline-label">💥 Blast Wave</span>
+                        </span>
+                    </label>
+                    
+                    <label class="timeline-item">
+                        <input type="radio" name="visualizationLayer" id="showThermal" value="thermal">
+                        <span class="timeline-number">3</span>
+                        <span class="timeline-content">
+                            <span class="timeline-label">🔥 Thermal Radiation</span>
+                        </span>
+                    </label>
+                    
+                    <label class="timeline-item phase-2">
+                        <input type="radio" name="visualizationLayer" id="showSeismic" value="seismic">
+                        <span class="timeline-number">4</span>
+                        <span class="timeline-content">
+                            <span class="timeline-label">🌍 Seismic Effects</span>
+                            <span class="phase-badge-small">Phase 2</span>
+                        </span>
+                    </label>
+                    
+                    <label class="timeline-item timeline-all">
+                        <input type="radio" name="visualizationLayer" id="showAll" value="all">
+                        <span class="timeline-number">★</span>
+                        <span class="timeline-content">
+                            <span class="timeline-label">🌌 Show All Effects</span>
+                        </span>
+                    </label>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Map Container -->
+        <main class="map-container">
+            <div id="map"></div>
+            
+            <!-- Map Overlays -->
+            <div class="map-overlay top-left">
+                <div class="terrain-controls">
+                    <label for="terrainExaggeration">Terrain Height:</label>
+                    <input type="range" id="terrainExaggeration" min="1" max="10" value="1" step="0.5">
+                    <span id="terrainExaggerationValue">1x</span>
+                </div>
+            </div>
+
+            <div class="map-overlay top-right">
+                <div class="status-panel" id="statusPanel">
+                    <div class="status-item">
+                        <span class="status-label">Status:</span>
+                        <span class="status-value" id="simulationStatus">Ready</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Loading Indicator -->
+            <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Calculating impact effects...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="src/app.js"></script>
+</body>
+</html>

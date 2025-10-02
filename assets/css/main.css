@@ -1,0 +1,369 @@
+/* =============================================================================
+   Asteroid Impact Simulator - Main Styles
+   ============================================================================= */
+
+:root {
+    /* Color Palette */
+    --primary-bg: #0f1419;
+    --secondary-bg: #1e2328;
+    --tertiary-bg: #2a2f36;
+    --accent-color: #ff6b35;
+    --accent-hover: #ff8659;
+    --text-primary: #ffffff;
+    --text-secondary: #b8bcc3;
+    --text-muted: #8a9199;
+    --border-color: #3a404a;
+    --success-color: #00d4aa;
+    --warning-color: #ffa726;
+    --error-color: #ff5252;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Borders */
+    --border-radius: 8px;
+    --border-radius-sm: 4px;
+    --border-radius-lg: 12px;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.35s ease;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow: hidden;
+}
+
+/* Header */
+.app-header {
+    background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+    border-bottom: 1px solid var(--border-color);
+    padding: var(--spacing-md) var(--spacing-lg);
+    position: relative;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+}
+
+.app-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.app-title .icon {
+    font-size: 1.8rem;
+    filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.3));
+}
+
+.phase-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.phase-badge {
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-sm);
+}
+
+.phase-badge-small {
+    background: var(--text-muted);
+    color: var(--primary-bg);
+    padding: 2px 6px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-left: auto;
+}
+
+/* Main Layout */
+.app-container {
+    display: flex;
+    height: calc(100vh - 70px);
+    overflow: hidden;
+}
+
+/* Map Container */
+.map-container {
+    flex: 1;
+    position: relative;
+    background: var(--secondary-bg);
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Map Overlays */
+.map-overlay {
+    position: absolute;
+    background: rgba(30, 35, 40, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+}
+
+.map-overlay.top-left {
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+}
+
+.map-overlay.top-right {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+}
+
+.map-overlay.bottom-right {
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    max-width: 300px;
+}
+
+/* Terrain Controls */
+.terrain-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+}
+
+.terrain-controls label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.terrain-controls input[type="range"] {
+    width: 100px;
+}
+
+.terrain-controls span {
+    color: var(--accent-color);
+    font-weight: 600;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* Status Panel */
+.status-panel {
+    min-width: 150px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.status-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.status-value {
+    color: var(--success-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Results Panel */
+.results-panel h4 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-xs);
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.result-value {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.result-value.highlight {
+    color: var(--accent-color);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 20, 25, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--spacing-md);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-overlay p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-top: var(--spacing-md);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .app-container {
+        flex-direction: column;
+    }
+    
+    .control-panel {
+        width: 100% !important;
+        height: auto;
+        max-height: 40vh;
+        order: 2;
+    }
+    
+    .map-container {
+        order: 1;
+        height: 60vh;
+    }
+    
+    .map-overlay.bottom-right {
+        bottom: 10vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-header {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .app-title {
+        font-size: 1.2rem;
+    }
+    
+    .map-overlay {
+        padding: var(--spacing-sm);
+    }
+    
+    .map-overlay.top-left,
+    .map-overlay.top-right,
+    .map-overlay.bottom-right {
+        position: static;
+        margin: var(--spacing-sm);
+    }
+}
+
+/* MapLibre GL Overrides */
+.maplibregl-ctrl-group {
+    background: rgba(30, 35, 40, 0.95) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.maplibregl-ctrl-group button {
+    background-color: transparent !important;
+    border: none !important;
+    color: var(--text-primary) !important;
+}
+
+.maplibregl-ctrl-group button:hover {
+    background-color: var(--accent-color) !important;
+}
+
+.maplibregl-popup {
+    z-index: 200;
+}
+
+.maplibregl-popup-content {
+    background: var(--secondary-bg) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.maplibregl-popup-anchor-left .maplibregl-popup-tip,
+.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+    border-color: var(--border-color) !important;
+}

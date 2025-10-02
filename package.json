@@ -1,0 +1,39 @@
+{
+  "name": "asteroid-impact-simulator",
+  "version": "1.0.0",
+  "description": "Scientific asteroid impact simulator with 3D mapping and physics calculations - Phase 1 Complete",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "servor . index.html 3000 --reload",
+    "start": "servor . index.html 8080",
+    "build": "echo 'Build completed - static files ready for deployment'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "asteroid",
+    "impact",
+    "simulator",
+    "3d",
+    "mapping",
+    "physics",
+    "maplibre",
+    "webgl"
+  ],
+  "author": "Asteroid Impact Simulator Team",
+  "license": "MIT",
+  "devDependencies": {
+    "servor": "^4.0.2"
+  },
+  "dependencies": {
+    "maplibre-gl": "^3.6.2",
+    "@turf/turf": "^6.5.0",
+    "d3": "^7.8.5",
+    "chart.js": "^4.4.0"
+  },
+  "browserslist": [
+    "Chrome >= 61",
+    "Firefox >= 60",
+    "Safari >= 11"
+  ]
+}
